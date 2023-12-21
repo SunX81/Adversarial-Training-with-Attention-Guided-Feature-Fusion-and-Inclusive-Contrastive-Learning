@@ -20,13 +20,17 @@ The complete list of required packages are available in [requirement.txt](requir
 # Usage
 Download data in Datasets to data/.
 
-Download base models from the Google Drive link and move them to base_models/.
+ [BaiduYun Drive(code: 9nah)](https://pan.baidu.com/s/1oG2c2fNU9-Xzmzsjq-BGiA)
+ 
+Download base models from the BaiduYun Drive link and move them to base_models/.
 
-(optional) Download adversarial examples of ImageNet, ImageNette, CIFAR-10 and CIFAR-100 generated using untargeted attack (LaVAN) from the Google Drive link to dump/.
+(optional) Download adversarial examples of ImageNet, ImageNette, CIFAR-10 and CIFAR-100 generated using untargeted attack (LaVAN) from the BaiduYun Drive link.
+ImageNet and ImageNette to data/.
+CIFAR-10 and CIFAR-100 to dump/.
 
-(optional) Download checkpoints from Google Drive link and move them to checkpoints/.
+(optional) Download checkpoints from BaiduYun Drive link and move them to checkpoints/.
 
-See [example_cmd.sh](example_cmd.sh) for example commands for running the code.
+See [example_cmd.sh](example_cmd.sh) for example commands for running the code.CIFAR-10 and CIFAR-100
 
 # Acknowlegements
 Related Repositories:
