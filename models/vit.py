@@ -151,17 +151,18 @@ class Block(nn.Module):
         return x_new
 
 
-    def forward(self, x, i):
+    def forward(self, x, i, att=False):
         y = self.crop_residual_block(x)
         x, attn = self.attn(self.norm1(x))
 
         # Attention-Guided Feature Fusion
-        if i < 3:
-            x = self.attn_fusion(x, 6, attn)
-        elif i < 9:
-            x = self.attn_fusion(x, 4, attn)
-        else:
-            x = self.attn_fusion(x, 2, attn)
+        if att:
+            if i < 3:
+                x = self.attn_fusion(x, 6, attn)
+            elif i < 9:
+                x = self.attn_fusion(x, 4, attn)
+            else:
+                x = self.attn_fusion(x, 2, attn)
 
         x = y + self.drop_path(x)
         x = x + self.mlp(self.norm2(x))
@@ -319,7 +320,7 @@ class VisionTransformer(nn.Module):
         self.num_classes = num_classes
         self.head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
 
-    def forward_features(self, x):
+    def forward_features(self, x, att=False):
         B = x.shape[0]
         x = self.patch_embed(x)
 
@@ -331,15 +332,15 @@ class VisionTransformer(nn.Module):
         # Attention-Guided Feature Fusion
         i = 0
         for blk in self.blocks:
-            x, attn = blk(x, i)
+            x, attn = blk(x, i, att)
             i += 1
 
         x = self.norm(x)[:, 0]
         x = self.pre_logits(x)
         return x
 
-    def forward(self, x):
-        feat = self.forward_features(x)
+    def forward(self, x, att=False):
+        feat = self.forward_features(x, att)
 
         X = self.head(feat)
 
@@ -444,7 +445,9 @@ class AFICL(nn.Module):
             nn.Linear(self.mlp_hidden, self.out_dim),
         )
 
-    def forward(self, x):
-        feat, X = self.encoder(x)
-        feat = F.normalize(self.projector(feat), dim=1)
+    def forward(self, x, con=False, att=False):
+        feat, X = self.encoder(x, att)
+        if con:
+            # Inclusive Contrastive Learning (ICL)
+            feat = F.normalize(self.projector(feat), dim=1)
         return feat, X
