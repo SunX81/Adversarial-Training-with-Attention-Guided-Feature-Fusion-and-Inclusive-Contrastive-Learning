@@ -189,7 +189,7 @@ def train_adv(args, model, ds_train, adv_train, ds_test, adv_test, logger):
 
             bsz = int(y.shape[0] / 2)
 
-            feat, output = model(X)
+            feat, output = model(X, con=True, att=True)
 
             AT_loss = AT_criterion(output, Y)
 
