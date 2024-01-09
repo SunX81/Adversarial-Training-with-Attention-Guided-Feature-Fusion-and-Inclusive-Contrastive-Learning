@@ -198,7 +198,7 @@ def train_adv(args, model, ds_train, adv_train, ds_test, adv_test, logger):
             y, _ = torch.split(y, [bsz, bsz], dim=0)
             ICL_loss = ICL_criterion(feat, y)
 
-            loss = (ICL_loss + AT_loss)
+            loss = 0.5 * (ICL_loss + AT_loss)
 
             opt.zero_grad()
             (loss / args.accum_steps).backward()
